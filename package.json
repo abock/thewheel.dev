@@ -1,0 +1,21 @@
+{
+  "name": "thewheel.dev",
+  "version": "1.0.0",
+  "description": "The Wheel",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abock/thewheel.dev.git"
+  },
+  "author": "Aaron Bockover",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/abock/thewheel.dev/issues"
+  },
+  "homepage": "https://thewheel.dev",
+  "scripts": {
+    "build": "tsc -p src/tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  }
+}

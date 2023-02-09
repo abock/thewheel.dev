@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The Wheel</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <style type="text/css">
+      body {
+        background-color: rgb(20, 23, 32);
+        color: rgb(185, 183, 178);
+        font-size: 18px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont,
+          'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+          'Helvetica Neue', sans-serif;
+        text-align: center;
+      }
+
+      a {
+        color: rgba(255, 85, 241, 1);
+        text-decoration: none;
+      }
+      
+      a:hover {
+        color: white;
+      }
+
+      footer {
+        font-size: 0.75rem;
+        padding-top: 3rem;
+      }
+
+      .wheel-container {
+        width: 100%;
+        margin: 2rem auto;
+        max-width: 500px;
+      }
+
+      .wheel-container *:not(textarea) {
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      .wheel-container > .wheel {
+        width: 100%;
+      }
+
+      .wheel-container > .accessories {
+        margin: 3rem 2rem;
+      }
+
+      .wheel-container > .accessories > label {
+        display: block;
+        width: 100%;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: rgb(255, 106, 243);
+        margin: 0.5rem 0 0.5rem 0;
+      }
+
+      .wheel-container > .accessories > textarea {
+        width: calc(100% - 2rem);
+        border-radius: 1rem;
+        font-size: 1.5rem;
+        padding: 1rem;
+        margin-bottom: 2rem;
+
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        color: white;
+  
+        box-shadow: inset 0.5rem 0.5rem 2rem rgba(0, 0, 0, 0.25);
+      }
+
+      .wheel-container > .accessories > textarea:focus {
+        border-color: rgba(255, 85, 241, 1);
+        outline: none;
+        box-shadow:
+          0 0 1rem rgba(255, 85, 241, .5),
+          inset 0.5rem 0.5rem 2rem rgba(0, 0, 0, 0.25);
+      }
+
+      #selected-slice {
+        font-size: 2em;
+        font-weight: bold;
+        color: white;
+        text-align: center;
+        margin-top: 2rem;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wheel-container">
+      <div id="wheel" class="wheel"></div>
+      <div id="selected-slice" role="button"></div>
+      <div class="accessories">
+        <label for="slices-text">Define Your Slices:</label>
+        <textarea id="slices-text" rows="6"></textarea>
+        <a href="#" id="copy-share-link">Link To Your 🍕</a>
+      </div>
+      <footer>
+        <a href="https://github.com/abock/thewheel.dev">Made</a> by <a href="https://twitter.com/abock">@abock</a>
+      </footer>
+    </div>
+    <script src="index.js?v="></script>
+    <script>
+      const wheelElem = document.getElementById("wheel");
+      const slicesTextElem = document.getElementById("slices-text");
+      const selectedSliceElem = document.getElementById("selected-slice");
+      const copyShareLinkElem = document.getElementById("copy-share-link");
+
+      const updateSlices = () => {
+        wheel.setSlicesFromText(slicesTextElem.value);
+        const slices = slicesTextElem.value.trim();
+        localStorage.setItem("slices", slices);
+        copyShareLinkElem.href = "#" + encodeURIComponent(slices);
+      };
+
+      const wheel = new TheWheel(
+        wheelElem,
+        (_, isFinal, slice) =>
+          selectedSliceElem.innerText = slice
+            ? "👉 " + slice.text + " 👈"
+            : "🍕");
+
+      selectedSliceElem.addEventListener("click", _ =>
+        wheel.removeSelectedSliceFromPlay());
+      
+      if (window.location.hash) {
+        slicesTextElem.value = decodeURIComponent(
+          window.location.hash.substring(1));
+      } else {
+        slicesTextElem.value = localStorage.getItem("slices");
+      }
+
+      updateSlices();
+      slicesTextElem.addEventListener("keyup", _ => updateSlices());
+
+      wheel.setSlicesFromText(slicesTextElem.value);
+    </script>
+  </body>
+</html>
